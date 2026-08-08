@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Ans — Custom PC Builds, Multan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#06080a;
+    --surface:#0d1218;
+    --surface-2:#12181f;
+    --line:rgba(255,255,255,0.08);
+    --line-strong:rgba(255,255,255,0.16);
+    --text:#eef1f4;
+    --text-dim:#8b93a3;
+    --teal:#2fe0d6;
+    --purple:#9b6bff;
+    --amber:#f2a93b;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{font-family:'Chakra Petch',sans-serif;font-weight:600;letter-spacing:0.01em;}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  img{display:block;max-width:100%;}
+
+  /* signature circuit trace */
+  #trace{
+    position:fixed;top:0;left:0;width:3px;height:100vh;
+    background:var(--line);z-index:40;
+  }
+  #trace-fill{
+    position:absolute;top:0;left:0;width:100%;height:0%;
+    background:linear-gradient(180deg,var(--teal),var(--purple));
+    box-shadow:0 0 12px rgba(47,224,214,0.6);
+    transition:height 0.1s linear;
+  }
+  @media (max-width:900px){ #trace{display:none;} }
+
+  /* nav */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 40px;
+    background:rgba(6,8,10,0.7);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand svg{width:22px;height:22px;}
+  .brand span{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:19px;letter-spacing:0.04em;}
+  .navlinks{display:flex;gap:34px;}
+  .navlinks a{color:var(--text-dim);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s;}
+  .navlinks a:hover{color:var(--teal);}
+  .nav-cta{
+    border:1px solid var(--teal);color:var(--teal);
+    padding:9px 18px;border-radius:6px;font-size:13px;font-weight:600;
+    text-decoration:none;transition:all .2s;font-family:'JetBrains Mono',monospace;
+  }
+  .nav-cta:hover{background:var(--teal);color:#04211f;}
+  @media (max-width:800px){ .navlinks{display:none;} }
+
+  /* hero */
+  .hero{
+    position:relative;height:100vh;min-height:640px;
+    display:flex;align-items:flex-end;
+    background:url('images/hero.png') center/cover no-repeat;
+  }
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(6,8,10,0.35) 0%,rgba(6,8,10,0.55) 55%,var(--bg) 100%);
+  }
+  .hero-inner{position:relative;z-index:2;padding-bottom:72px;width:100%;}
+  .hero-inner .eyebrow{margin-bottom:14px;display:block;}
+  .hero-inner h1{font-size:clamp(28px,4vw,44px);line-height:1.15;max-width:640px;margin-bottom:16px;}
+  .hero-inner p{color:var(--text-dim);max-width:520px;font-size:16px;line-height:1.6;margin-bottom:28px;}
+  .hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    padding:14px 26px;border-radius:6px;font-weight:600;font-size:14px;
+    text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .btn-primary{background:var(--teal);color:#04211f;}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(47,224,214,0.25);}
+  .btn-ghost{border:1px solid var(--line-strong);color:var(--text);}
+  .btn-ghost:hover{border-color:var(--purple);color:var(--purple);}
+  .scroll-cue{
+    position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+    width:1px;height:40px;background:linear-gradient(180deg,transparent,var(--teal));
+    z-index:2;
+  }
+
+  /* section shell */
+  section{padding:110px 0;position:relative;}
+  .section-head{max-width:600px;margin-bottom:52px;}
+  .section-head .eyebrow{margin-bottom:12px;}
+  .section-head h2{font-size:clamp(24px,3vw,34px);line-height:1.2;margin-bottom:14px;}
+  .section-head p{color:var(--text-dim);font-size:15.5px;line-height:1.65;}
+
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* why partner grid */
+  .grid-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  @media (max-width:900px){.grid-cards{grid-template-columns:1fr;}}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:26px 24px;border-left:2px solid var(--line);
+    transition:border-color .25s, transform .25s, background .25s;
+  }
+  .card:hover{border-left-color:var(--teal);background:var(--surface-2);transform:translateY(-4px);}
+  .card .num{font-family:'JetBrains Mono',monospace;color:var(--teal);font-size:12px;margin-bottom:12px;display:block;}
+  .card h3{font-size:16.5px;margin-bottom:9px;font-weight:600;}
+  .card p{color:var(--text-dim);font-size:14px;line-height:1.6;}
+
+  /* image feature — split */
+  .feature{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+  @media (max-width:900px){.feature{grid-template-columns:1fr;gap:32px;}}
+  .feature.reverse .feature-img{order:2;}
+  .feature.reverse .feature-text{order:1;}
+  @media (max-width:900px){.feature.reverse .feature-img,.feature.reverse .feature-text{order:0;}}
+  .feature-img{border-radius:14px;overflow:hidden;border:1px solid var(--line);position:relative;}
+  .feature-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+  .feature-img:hover img{transform:scale(1.04);}
+  .feature-text h2{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px;}
+  .feature-text p{color:var(--text-dim);font-size:15px;line-height:1.7;margin-bottom:22px;}
+  .tag-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+  .tag{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-dim);
+    border:1px solid var(--line-strong);padding:6px 12px;border-radius:20px;
+  }
+
+  /* full-bleed banner sections */
+  .banner-section{padding:0;}
+  .banner-full{position:relative;width:100%;overflow:hidden;}
+  .banner-full img{width:100%;display:block;transition:transform .6s;}
+  .banner-full:hover img{transform:scale(1.02);}
+
+  /* stats strip under signature */
+  .stats{display:flex;gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:60px;}
+  .stat{flex:1;padding:28px 24px;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .display{font-size:26px;color:var(--amber);}
+  .stat span{display:block;color:var(--text-dim);font-size:12.5px;margin-top:6px;}
+  @media (max-width:700px){.stats{flex-direction:column;}.stat{border-right:none;border-bottom:1px solid var(--line);}}
+
+  /* CTA / partnership */
+  .cta-section{position:relative;background:url('images/handshake.png') center/cover no-repeat;}
+  .cta-section::before{content:'';position:absolute;inset:0;background:rgba(6,8,10,0.72);}
+  .cta-inner{position:relative;z-index:2;text-align:center;max-width:640px;margin:0 auto;}
+  .cta-inner .eyebrow{justify-content:center;display:flex;}
+  .cta-inner h2{font-size:clamp(28px,4vw,42px);margin:16px 0 18px;}
+  .cta-inner p{color:var(--text-dim);font-size:16px;line-height:1.7;margin-bottom:34px;}
+  .cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+
+  footer{padding:48px 0 36px;border-top:1px solid var(--line);}
+  .foot-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+  .foot-brand{display:flex;align-items:center;gap:10px;}
+  .foot-brand span{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;}
+  footer .addr{color:var(--text-dim);font-size:13.5px;}
+  footer .addr b{color:var(--text);font-weight:500;}
+</style>
+</head>
+<body>
+
+<div id="trace"><div id="trace-fill"></div></div>
+
+<nav>
+  <div class="brand">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L22 20H2L12 2Z" stroke="#2fe0d6" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 9L17 18H7L12 9Z" fill="#2fe0d6"/></svg>
+    <span>TECH ANS</span>
+  </div>
+  <div class="navlinks">
+    <a href="#why">Why Partner</a>
+    <a href="#builds">Builds</a>
+    <a href="#signature">Signature</a>
+    <a href="#compare">Compare</a>
+    <a href="#transform">Transform</a>
+    <a href="#follow">Follow</a>
+  </div>
+  <a class="nav-cta" href="#partner">Let's Talk</a>
+</nav>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <span class="eyebrow">Content partnership proposal</span>
+    <h1>Your builds. Our cameras. One growing brand.</h1>
+    <p>A daily content engine for Tech Ans — YouTube, TikTok, Instagram and Facebook — built entirely around entertainment first, sales second. Zero cost to you, commission only on results.</p>
+    <div class="hero-btns">
+      <a href="#why" class="btn btn-primary">See the pitch</a>
+      <a href="#partner" class="btn btn-ghost">Skip to partnership</a>
+    </div>
+  </div>
+  <div class="scroll-cue"></div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Why this works</span>
+      <h2>Zero risk on your side, real reach on ours</h2>
+      <p>No upfront cost, no inventory risk, no wasted time — just content that turns your shop into a destination.</p>
+    </div>
+    <div class="grid-cards">
+      <div class="card reveal">
+        <span class="num">01</span>
+        <h3>No upfront cost</h3>
+        <p>Camera, editing, and posting are on us. You supply the components and the build time — same as any normal order.</p>
+      </div>
+      <div class="card reveal">
+        <span class="num">02</span>
+        <h3>Commission on results only</h3>
+        <p>We only earn when an order actually comes in through the content. If it doesn't perform, you've lost nothing.</p>
+      </div>
+      <div class="card reveal">
+        <span class="num">03</span>
+        <h3>Free advertising, better than ads</h3>
+        <p>The reach you'd normally pay for in boosted posts, delivered as content people actually choose to watch.</p>
+      </div>
+      <div class="card reveal">
+        <span class="num">04</span>
+        <h3>Fully trackable</h3>
+        <p>A unique code or "mention this video" offer means every sale generated is clearly attributed — no guesswork.</p>
+      </div>
+      <div class="card reveal">
+        <span class="num">05</span>
+        <h3>First-mover advantage</h3>
+        <p>No local shop is doing this yet. First to show up consistently is the one people remember and trust.</p>
+      </div>
+      <div class="card reveal">
+        <span class="num">06</span>
+        <h3>A destination, not just a shop</h3>
+        <p>Themed builds and signature presentation give people a reason to visit and share — not just to buy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="builds">
+  <div class="wrap">
+    <div class="feature reveal">
+      <div class="feature-img"><img src="images/custom-builds.png" alt="Custom PC build"></div>
+      <div class="feature-text">
+        <span class="eyebrow">Content pillar 01</span>
+        <h2>Custom PC builds</h2>
+        <p>The bread and butter — clean build videos that show real craftsmanship. Every build becomes a piece of content: parts breakdown, cable management, first boot, benchmark reveal.</p>
+        <div class="tag-row">
+          <span class="tag">Build logs</span>
+          <span class="tag">Component breakdowns</span>
+          <span class="tag">First boot reveals</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="signature" class="banner-section">
+  <div class="banner-full reveal"><img src="images/signature-builds.png" alt="Signature theme builds"></div>
+  <div class="wrap" style="padding-top:56px;">
+    <div class="section-head reveal">
+      <span class="eyebrow">Content pillar 02 — the differentiator</span>
+      <h2>Signature theme builds</h2>
+      <p>Matching RGB, custom stickers, and a decorative figure alongside every themed build — the same way cutting and dipping fruit turns a low-value product into something people pay a premium for. This is what makes Tech Ans instantly recognizable.</p>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><div class="display">100%</div><span>Entertainment-first, zero hard-sell</span></div>
+      <div class="stat"><div class="display">4</div><span>Platforms posted daily</span></div>
+      <div class="stat"><div class="display">₨0</div><span>Upfront cost to the shop</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="compare" class="banner-section" style="padding-top:110px;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Content pillar 03</span>
+      <h2>Budget vs Pro comparisons</h2>
+      <p>The format that never gets old — same series, different budgets, different chips. Keeps people coming back to see what's next.</p>
+    </div>
+  </div>
+  <div class="banner-full reveal"><img src="images/budget-vs-pro.png" alt="Budget vs pro PC build comparison"></div>
+</section>
+
+<section id="transform" class="banner-section" style="padding-top:110px;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Content pillar 04</span>
+      <h2>The glow-up transformation</h2>
+      <p>Old, dusty, forgotten PCs rebuilt into something people are proud to show off — the strongest visual hook in the whole lineup.</p>
+    </div>
+  </div>
+  <div class="banner-full reveal"><img src="images/glowup.png" alt="Before and after PC transformation"></div>
+</section>
+
+<section id="follow" class="banner-section" style="padding-top:110px;padding-bottom:110px;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Where it all lives</span>
+      <h2>Posted daily, everywhere</h2>
+      <p>Shorts and reels drive discovery, long-form builds the trust, every platform points back to the shop.</p>
+    </div>
+  </div>
+  <div class="banner-full reveal"><img src="images/social.png" alt="Follow the build — social platforms"></div>
+</section>
+
+<section id="partner" class="cta-section">
+  <div class="wrap cta-inner">
+    <span class="eyebrow">Ready when you are</span>
+    <h2>Let's build together</h2>
+    <p>Two or three demo videos, no commitment — see the content, see the response, then we talk numbers. Tech Ans, Khan Plaza, Multan.</p>
+    <div class="cta-btns">
+      <a href="#" class="btn btn-primary">Start with a demo build</a>
+      <a href="#" class="btn btn-ghost">Discuss commission terms</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <div class="foot-brand">
+      <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M12 2L22 20H2L12 2Z" stroke="#2fe0d6" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 9L17 18H7L12 9Z" fill="#2fe0d6"/></svg>
+      <span>TECH ANS</span>
+    </div>
+    <div class="addr">Custom PC Builds · <b>Khan Plaza, Multan</b></div>
+  </div>
+</footer>
+
+<script>
+  // scroll progress trace
+  const fill = document.getElementById('trace-fill');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    fill.style.height = pct + '%';
+  });
+
+  // reveal on scroll
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  els.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
